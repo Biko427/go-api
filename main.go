@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
+	"github.com/Biko427/go-api/models"
 	"github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
@@ -33,10 +33,14 @@ func main() {
 		log.Fatal(pingErr)
 	}
 	fmt.Println("Mysql connected successfully")
+	// this is our logic to create our table
+	err = models.CreateUserTable(db)
+	err = models.CreateAccountTable(db)
+	if err != nil {
+		log.Fatal(err)
+	}
 	r := mux.NewRouter()
-	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, Nick")
-	})
+	// r.HandleFunc("/", handlers.SaveAccount(rw, r))
 	fmt.Println("Started server successfully at http://localhost:8080")
 	
 	if err := http.ListenAndServe(":8080", r); err != nil {
